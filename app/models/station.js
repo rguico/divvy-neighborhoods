@@ -1,11 +1,12 @@
 var Backbone = require('backbone');
 var Station = Backbone.Model.extend({
 	defaults: {
-		name: 'default',
-		address: 'default',
-		address2: '',
-		bikesAvailable: 0,
-		docksAvailable: 0,
+		id: 0,
+		stationName: 'default',
+		stAddress1: 'default',
+		stAddress2: '',
+		availableBikes: 0,
+		availableDocks: 0,
 		selected: false
 	}
 })
