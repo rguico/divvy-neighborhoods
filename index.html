@@ -3,11 +3,16 @@
 		<script src="static/bundle.js"></script>
 	</head>
 	<body>
+		<style type="text/css">
+			.selected {
+				background-color: rgb(61, 183, 228);
+				color: white;
+				margin: 5px 0;
+				padding: 5px;
+			}
+		</style>
 		<script>
 		var app = require('app');
-		var station = app.stations.get('5');
-		var view = new app.StationView({model: station});
-		document.body.appendChild(view.render().el);
 
 		var stationsList = new app.StationsList({collection: app.stations});
 		document.body.appendChild(stationsList.render().el);

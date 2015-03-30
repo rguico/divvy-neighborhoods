@@ -9,7 +9,7 @@ var Stations = Backbone.Collection.extend({
 		});
 	},
 
-	selectById: function (id) {
+	selectByID: function (id) {
 		this.resetSelected();
 		var station = this.get({id: id});
 		station.set({ "selected": true });
