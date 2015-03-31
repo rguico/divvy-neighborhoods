@@ -4,7 +4,7 @@ var _ = require('underscore');
 var StationView = Backbone.View.extend({
     tagName: 'article',
     className: 'station',
-    template: '<h1><a href="/stations/<%= id %>"><%= stationName %><hr/></h1>',
+    template: '<h1><a href="/#stations/<%= id %>"><%= stationName %><hr/></h1>',
     initialize: function (options) {
         this.listenTo(this.model, 'change:selected', this.render);
         this.router = options.router;

@@ -8,7 +8,7 @@ $(document).ready(function () {
 
 	var router = new StationsRouter({el: $('#stations') });
 	Backbone.history.start({
-		pushState: true,
+		pushState: false,
 		root: '/'
 	});
 });
