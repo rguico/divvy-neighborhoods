@@ -1,17 +1,14 @@
 var Backbone = require('backbone');
 var $ = require('jquery-untouched');
 Backbone.$ = $;
-var Stations = require('collections/stations');
-var data = require('../sampledata/divvy_stations.json');
+var StationsRouter = require('routers/stations');
 
-var StationView = require('views/station');
-var stations = new Stations(data);
+$(document).ready(function () {
+	console.log("Divvy Neighborhoods v.0.0.1!");
 
-var StationsList = require('views/stationList');
-
-
-module.exports = {
-	stations: stations,
-	StationView: StationView,
-	StationsList: StationsList
-};
+	var router = new StationsRouter({el: $('#stations') });
+	Backbone.history.start({
+		pushState: true,
+		root: '/'
+	});
+});

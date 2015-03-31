@@ -1,4 +1,19 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var Backbone = require('backbone');
+var $ = require('jquery-untouched');
+Backbone.$ = $;
+var StationsRouter = require('routers/stations');
+
+$(document).ready(function () {
+	console.log("Divvy Neighborhoods v.0.0.1!");
+
+	var router = new StationsRouter({el: $('#stations') });
+	Backbone.history.start({
+		pushState: true,
+		root: '/'
+	});
+});
+},{"backbone":2,"jquery-untouched":9,"routers/stations":6}],2:[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1608,7 +1623,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 }));
 
-},{"underscore":2}],2:[function(require,module,exports){
+},{"underscore":3}],3:[function(require,module,exports){
 //     Underscore.js 1.8.2
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3146,7 +3161,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
   }
 }.call(this));
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var Backbone = require('backbone');
 var Station = require('models/station');
 var Stations = Backbone.Collection.extend({
@@ -3167,7 +3182,7 @@ var Stations = Backbone.Collection.extend({
 
 });
 module.exports = Stations;
-},{"backbone":1,"models/station":4}],4:[function(require,module,exports){
+},{"backbone":2,"models/station":5}],5:[function(require,module,exports){
 var Backbone = require('backbone');
 var Station = Backbone.Model.extend({
 	defaults: {
@@ -3182,7 +3197,37 @@ var Station = Backbone.Model.extend({
 })
 
 module.exports = Station;
-},{"backbone":1}],5:[function(require,module,exports){
+},{"backbone":2}],6:[function(require,module,exports){
+var Backbone = require('backbone');
+// data
+var Stations = require('collections/stations');
+var data = require('../../../static/divvy_stations.json');
+var stationModel = new Stations(data);
+// views
+var StationList = require('views/stationList');
+
+var StationsRouter = Backbone.Router.extend({
+	routes: {
+		'stations/:id': 'selectStation',
+		'': 'showMain'
+	},
+	selectStation: function(id) {
+		this.stations.resetSelected();
+		this.stations.selectByID(id);
+	},
+	showMain: function() {
+		this.stationList.render();
+	},
+	initialize: function(options) {
+		this.stations = stationModel;
+		this.stationList = new StationList({
+			el: options.el,
+			collection: stationModel
+		});
+	}
+});
+module.exports = StationsRouter;
+},{"../../../static/divvy_stations.json":11,"backbone":2,"collections/stations":4,"views/stationList":8}],7:[function(require,module,exports){
 var $ = require('jquery-untouched');
 var Backbone = require('backbone');
 var _ = require('underscore');
@@ -3211,7 +3256,7 @@ var StationView = Backbone.View.extend({
     }
 });
 module.exports = StationView;
-},{"backbone":1,"jquery-untouched":7,"underscore":8}],6:[function(require,module,exports){
+},{"backbone":2,"jquery-untouched":9,"underscore":10}],8:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var StationView = require('views/station');
@@ -3227,7 +3272,7 @@ var StationsList = Backbone.View.extend({
 	}
 });
 module.exports = StationsList;
-},{"backbone":1,"views/station":5}],7:[function(require,module,exports){
+},{"backbone":2,"views/station":7}],9:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.10.2
  * http://jquery.com/
@@ -13018,9 +13063,9 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 })( window );
 
-},{}],8:[function(require,module,exports){
-arguments[4][2][0].apply(exports,arguments)
-},{"dup":2}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
+arguments[4][3][0].apply(exports,arguments)
+},{"dup":3}],11:[function(require,module,exports){
 module.exports=[
     {
       "id": 5,
@@ -19023,22 +19068,4 @@ module.exports=[
       "landMark": "440"
     }
 ]
-},{}],"app":[function(require,module,exports){
-var Backbone = require('backbone');
-var $ = require('jquery-untouched');
-Backbone.$ = $;
-var Stations = require('collections/stations');
-var data = require('../sampledata/divvy_stations.json');
-
-var StationView = require('views/station');
-var stations = new Stations(data);
-
-var StationsList = require('views/stationList');
-
-
-module.exports = {
-	stations: stations,
-	StationView: StationView,
-	StationsList: StationsList
-};
-},{"../sampledata/divvy_stations.json":9,"backbone":1,"collections/stations":3,"jquery-untouched":7,"views/station":5,"views/stationList":6}]},{},[]);
+},{}]},{},[1]);

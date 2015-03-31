@@ -1,21 +1,22 @@
 <html>
 	<head>
-		<script src="static/bundle.js"></script>
+		<script src="/bundle.js"></script>
 	</head>
 	<body>
+		<a href="/">Homepage</a>
 		<style type="text/css">
 			.selected {
 				background-color: rgb(61, 183, 228);
 				color: white;
 				margin: 5px 0;
 				padding: 5px;
+				font-weight: bold;
 			}
 		</style>
-		<script>
-		var app = require('app');
 
-		var stationsList = new app.StationsList({collection: app.stations});
-		document.body.appendChild(stationsList.render().el);
+		<div id="stations">
+		</div>
+		<script>
 		</script>
 	</body>
 </html>
