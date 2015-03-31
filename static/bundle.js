@@ -13,7 +13,7 @@ $(document).ready(function () {
 		root: '/'
 	});
 });
-},{"backbone":2,"jquery-untouched":9,"routers/stations":6}],2:[function(require,module,exports){
+},{"backbone":2,"jquery-untouched":10,"routers/stations":6}],2:[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3199,7 +3199,6 @@ var Station = Backbone.Model.extend({
 module.exports = Station;
 },{"backbone":2}],6:[function(require,module,exports){
 var Backbone = require('backbone');
-var _ = require('underscore');
 
 // data
 var Stations = require('collections/stations');
@@ -3208,6 +3207,8 @@ var stationModel = new Stations(data);
 
 // views
 var StationList = require('views/stationList');
+
+var Layout = require('views/layout');
 
 var StationsRouter = Backbone.Router.extend({
 	routes: {
@@ -3223,16 +3224,52 @@ var StationsRouter = Backbone.Router.extend({
 	},
 	initialize: function(options) {
 		this.stations = stationModel;
-		this.stationList = new StationList({
-			el: options.el,
-			collection: stationModel
-		});
-		_.extend(this.stationList, {router: this});
-		this.stationList.render();
+		this.layout = Layout.getInstance({
+			el: '#stations',
+			collection: this.stations,
+			router: this
+		})
+		this.layout.render();
 	}
 });
 module.exports = StationsRouter;
-},{"../../../static/divvy_stations.json":11,"backbone":2,"collections/stations":4,"underscore":10,"views/stationList":8}],7:[function(require,module,exports){
+},{"../../../static/divvy_stations.json":12,"backbone":2,"collections/stations":4,"views/layout":7,"views/stationList":9}],7:[function(require,module,exports){
+'use strict';
+
+var Backbone = require('backbone');
+
+var StationsList = require('views/stationList');
+
+var Layout = Backbone.View.extend({
+
+	render: function () {
+		this.$el.append(this.stationsList.render().el);
+		return this;
+	},
+
+	initialize: function (options) {
+		this.stationsList = new StationsList({
+			el: options.el,
+			collection: options.collection,
+			router: options.router
+		});
+	}
+});
+
+var instance;
+Layout.getInstance = function (options) {
+	if (!instance) {
+		instance = new Layout({
+			el: options.el,
+			collection: options.collection,
+			router: options.router
+		});
+	}
+	return instance;
+};
+
+module.exports = Layout;
+},{"backbone":2,"views/stationList":9}],8:[function(require,module,exports){
 var $ = require('jquery-untouched');
 var Backbone = require('backbone');
 var _ = require('underscore');
@@ -3262,7 +3299,7 @@ var StationView = Backbone.View.extend({
     }
 });
 module.exports = StationView;
-},{"backbone":2,"jquery-untouched":9,"underscore":10}],8:[function(require,module,exports){
+},{"backbone":2,"jquery-untouched":10,"underscore":11}],9:[function(require,module,exports){
 var Backbone = require('backbone');
 
 var StationView = require('views/station');
@@ -3283,7 +3320,7 @@ var StationsList = Backbone.View.extend({
 	}
 });
 module.exports = StationsList;
-},{"backbone":2,"views/station":7}],9:[function(require,module,exports){
+},{"backbone":2,"views/station":8}],10:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.10.2
  * http://jquery.com/
@@ -13074,9 +13111,9 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 })( window );
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],11:[function(require,module,exports){
+},{"dup":3}],12:[function(require,module,exports){
 module.exports=[
     {
       "id": 5,

@@ -1,5 +1,4 @@
 var Backbone = require('backbone');
-var _ = require('underscore');
 
 // data
 var Stations = require('collections/stations');
@@ -8,6 +7,8 @@ var stationModel = new Stations(data);
 
 // views
 var StationList = require('views/stationList');
+
+var Layout = require('views/layout');
 
 var StationsRouter = Backbone.Router.extend({
 	routes: {
@@ -23,12 +24,12 @@ var StationsRouter = Backbone.Router.extend({
 	},
 	initialize: function(options) {
 		this.stations = stationModel;
-		this.stationList = new StationList({
-			el: options.el,
-			collection: stationModel
-		});
-		_.extend(this.stationList, {router: this});
-		this.stationList.render();
+		this.layout = Layout.getInstance({
+			el: '#stations',
+			collection: this.stations,
+			router: this
+		})
+		this.layout.render();
 	}
 });
 module.exports = StationsRouter;
