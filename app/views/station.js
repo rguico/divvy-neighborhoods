@@ -4,9 +4,10 @@ var _ = require('underscore');
 var StationView = Backbone.View.extend({
     tagName: 'article',
     className: 'station',
-    template: '<div><%= stationName %></div>',
-    initialize: function () {
+    template: '<h1><a href="/stations/<%= id %>"><%= stationName %><hr/></h1>',
+    initialize: function (options) {
         this.listenTo(this.model, 'change:selected', this.render);
+        this.router = options.router;
     },
     render: function () {
         var tmpl = _.template(this.template);
@@ -18,10 +19,10 @@ var StationView = Backbone.View.extend({
         'click': '_selectStation'
     },
     _selectStation: function (ev) {
-        ev.preventDefault();
         if (!this.model.get('selected')) {
             this.model.collection.resetSelected();
             this.model.collection.selectByID(this.model.id);
+            this.router.navigate('stations/' + this.model.id, {trigger: true, replace: true});
         }
     }
 });

@@ -3199,10 +3199,13 @@ var Station = Backbone.Model.extend({
 module.exports = Station;
 },{"backbone":2}],6:[function(require,module,exports){
 var Backbone = require('backbone');
+var _ = require('underscore');
+
 // data
 var Stations = require('collections/stations');
 var data = require('../../../static/divvy_stations.json');
 var stationModel = new Stations(data);
+
 // views
 var StationList = require('views/stationList');
 
@@ -3216,7 +3219,7 @@ var StationsRouter = Backbone.Router.extend({
 		this.stations.selectByID(id);
 	},
 	showMain: function() {
-		this.stationList.render();
+		this.stations.resetSelected();
 	},
 	initialize: function(options) {
 		this.stations = stationModel;
@@ -3224,19 +3227,22 @@ var StationsRouter = Backbone.Router.extend({
 			el: options.el,
 			collection: stationModel
 		});
+		_.extend(this.stationList, {router: this});
+		this.stationList.render();
 	}
 });
 module.exports = StationsRouter;
-},{"../../../static/divvy_stations.json":11,"backbone":2,"collections/stations":4,"views/stationList":8}],7:[function(require,module,exports){
+},{"../../../static/divvy_stations.json":11,"backbone":2,"collections/stations":4,"underscore":10,"views/stationList":8}],7:[function(require,module,exports){
 var $ = require('jquery-untouched');
 var Backbone = require('backbone');
 var _ = require('underscore');
 var StationView = Backbone.View.extend({
     tagName: 'article',
     className: 'station',
-    template: '<div><%= stationName %></div>',
-    initialize: function () {
+    template: '<h1><a href="/stations/<%= id %>"><%= stationName %><hr/></h1>',
+    initialize: function (options) {
         this.listenTo(this.model, 'change:selected', this.render);
+        this.router = options.router;
     },
     render: function () {
         var tmpl = _.template(this.template);
@@ -3248,10 +3254,10 @@ var StationView = Backbone.View.extend({
         'click': '_selectStation'
     },
     _selectStation: function (ev) {
-        ev.preventDefault();
         if (!this.model.get('selected')) {
             this.model.collection.resetSelected();
             this.model.collection.selectByID(this.model.id);
+            this.router.navigate('stations/' + this.model.id, {trigger: true, replace: true});
         }
     }
 });
@@ -3263,9 +3269,14 @@ var StationView = require('views/station');
 var StationsList = Backbone.View.extend({
 	tagName: 'section',
 
+	initialize: function(options) {
+		this.router = options.router;
+	},
+
 	render: function() {
+		var self = this;
 		var stationsView = this.collection.map(function(station) {
-			return (new StationView({model: station})).render().el;
+			return (new StationView({model: station, router: self.router})).render().el;
 		});
 		this.$el.html(stationsView);
 		return this;
